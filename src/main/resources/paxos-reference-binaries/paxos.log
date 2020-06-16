@@ -1,0 +1,90 @@
+{"level":"info","time":1592235702438,"message":"Hub listening on localhost:5000"}
+{"level":"info","time":1592235702438,"message":"ref-2: listening on localhost:5002"}
+{"level":"info","time":1592235702439,"message":"ref-3: listening on localhost:5003"}
+{"level":"info","time":1592235702439,"message":"ref-1: listening on localhost:5001"}
+{"level":"info","time":1592235702792,"message":"Received registration from ref-1"}
+{"level":"info","time":1592235702792,"message":"Received registration from ref-2"}
+{"level":"info","time":1592235702793,"message":"Received registration from ref-3"}
+{"level":"info","time":1592235705286,"message":"Received registration from andreea-1"}
+{"level":"info","time":1592235705287,"message":"Received registration from andreea-2"}
+{"level":"info","time":1592235705288,"message":"Received registration from andreea-3"}
+{"level":"info","time":1592235714297,"message":"sys-1/andreea-1 will propose 19"}
+{"level":"info","time":1592235714298,"message":"sys-1/andreea-2 will propose 35"}
+{"level":"info","time":1592235714300,"message":"sys-1/andreea-3 will propose 43"}
+{"level":"info","time":1592235714301,"message":"sys-1/ref-1 will propose 57"}
+{"level":"info","time":1592235714302,"message":"sys-1/ref-2 will propose 46"}
+{"level":"info","time":1592235714302,"message":"Starting system sys-1 of process ref-1 ..."}
+{"level":"info","time":1592235714302,"message":"sys-1/ref-1: Starting consensus among andreea-1, andreea-2, andreea-3, ref-1, ref-2, ref-3"}
+{"level":"info","time":1592235714302,"message":"sys-1/ref-3 will propose 89"}
+{"level":"info","time":1592235714302,"message":"Starting system sys-1 of process ref-2 ..."}
+{"level":"info","time":1592235714304,"message":"sys-1/ref-2: Starting consensus among andreea-1, andreea-2, andreea-3, ref-1, ref-2, ref-3"}
+{"level":"info","time":1592235714304,"message":"Starting system sys-1 of process ref-3 ..."}
+{"level":"info","time":1592235714304,"message":"sys-1/ref-3: Starting consensus among andreea-1, andreea-2, andreea-3, ref-1, ref-2, ref-3"}
+{"level":"info","time":1592235714605,"message":"sys-1/ref-1/EPFD: Increased timeout to 0.20 seconds"}
+{"level":"info","time":1592235714607,"message":"sys-1/ref-2/EPFD: Increased timeout to 0.20 seconds"}
+{"level":"info","time":1592235714607,"message":"sys-1/ref-3/EPFD: Increased timeout to 0.20 seconds"}
+{"level":"info","time":1592235714805,"message":"sys-1/ref-1/EPFD: Increased timeout to 0.30 seconds"}
+{"level":"info","time":1592235714808,"message":"sys-1/ref-3/EPFD: Increased timeout to 0.30 seconds"}
+{"level":"info","time":1592235714808,"message":"sys-1/ref-2/EPFD: Increased timeout to 0.30 seconds"}
+{"level":"info","time":1592235716009,"message":"sys-1/ref-1/EPFD: Increased timeout to 0.40 seconds"}
+{"level":"info","time":1592235716012,"message":"sys-1/ref-2/EPFD: Increased timeout to 0.40 seconds"}
+{"level":"info","time":1592235716385,"message":"sys-1/andreea-2 decided 19"}
+{"level":"info","time":1592235716533,"message":"sys-1/andreea-3 decided 19"}
+{"level":"info","time":1592235716549,"message":"sys-1/ref-1 decided 19"}
+{"level":"info","time":1592235716559,"message":"sys-1/ref-2 decided 19"}
+{"level":"info","time":1592235716570,"message":"sys-1/ref-3 decided 19"}
+{"level":"info","time":1592235716789,"message":"sys-1/andreea-1 decided 19"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235724160,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235724168,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235724282,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235726163,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235726170,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235726285,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235728165,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235728175,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235728288,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235730169,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235730181,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235730291,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235732172,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235732185,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235732293,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235734174,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"info","time":1592235734175,"message":"sys-1/ref-1/EPFD: Increased timeout to 0.50 seconds"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235734192,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235734296,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235736177,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235736207,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235736302,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235738180,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235738212,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235738306,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235740183,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235740214,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235740310,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"info","time":1592235740311,"message":"sys-1/ref-3/EPFD: Increased timeout to 0.40 seconds"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235742190,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235742216,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235742314,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235744193,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235744220,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235744317,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235746197,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"info","time":1592235746198,"message":"sys-1/ref-1/EPFD: Increased timeout to 0.60 seconds"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235746222,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"info","time":1592235746223,"message":"sys-1/ref-2/EPFD: Increased timeout to 0.50 seconds"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235746332,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"info","time":1592235746333,"message":"sys-1/ref-3/EPFD: Increased timeout to 0.50 seconds"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235748202,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235748227,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235748336,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235750205,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235750229,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5012: connectex: No connection could be made because the target machine actively refused it.","time":1592235750337,"message":"Failed to send NETWORK_MESSAGE to andreea-2"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235752208,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"info","time":1592235752209,"message":"sys-1/ref-1/EPFD: Increased timeout to 0.70 seconds"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235752233,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"error","error":"dial tcp 127.0.0.1:5013: connectex: No connection could be made because the target machine actively refused it.","time":1592235752341,"message":"Failed to send NETWORK_MESSAGE to andreea-3"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235754213,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235754237,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}
+{"level":"error","error":"dial tcp 127.0.0.1:5011: connectex: No connection could be made because the target machine actively refused it.","time":1592235754345,"message":"Failed to send NETWORK_MESSAGE to andreea-1"}

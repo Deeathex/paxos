@@ -1,0 +1,343 @@
+syntax = "proto3";
+package consensus; // You can change the package name to anything you like
+
+/*
+Model: Fail-Noisy
+
+app   Custom-made application
+uc    UniformConsensus                  Leader-Driven       5.7  225
+ep    EpochConsensus                    Read/Write Epoch    5.6  223
+ec    EpochChange                       Leader-Based        5.5  219
+beb   BestEffortBroadcast               Basic               3.1  76
+eld   EventualLeaderDetector            Elect Lower Epoch   2.8  57
+epfd  EventuallyPerfectFailureDetector  Increasing Timeout  2.7  55
+pl    PerfectLink (use TCP)
+
+     +---------- app
+     |            |
+     |           uc
+     |          /  \
+     |        ec   ep,ep,ep,ep
+     |      /| \  / \
+     |  eld  | beb   |
+     |   \    \  |  /
+     |    +- pl -+
+     |       |
+     +------+
+1. The communication is done using the Google Protobuffer 3.x messages defined below, over TCP. The exchange will be
+   asynchronous. When sending a request/response, open the TCP connection, send the message, then close the connection.
+   When listening for requests, get the request, then close the socket.
+
+2. The system consists of several processes and one hub. Your job is to implement the processes. The hub and reference
+   process binaries will be provided to you by the instructor.
+
+3. Process referencing: Upon starting, a process will connect to the hub and register sending: owner alias, process
+   index, process host, process listening port (see AppRegistration). The hub address and port will be configured manually.
+
+4. The evaluation will be done as follows:
+       - Share your screen with the instructor
+       - Start the reference hub and processes along with 3 processes of your implementation
+             #            HUB HOST + PORT  PROCESSES HOST + PORTS
+             > paxos.exe  127.0.0.1  5000  127.0.0.1  5001 5002 5003
+             May 18 12:17:01.474 INF Hub listening on 127.0.0.1:5000
+             May 18 12:17:01.475 INF ref-2: listening on 127.0.0.1:5002
+             May 18 12:17:01.475 INF ref-3: listening on 127.0.0.1:5003
+             May 18 12:17:01.475 INF ref-1: listening on 127.0.0.1:5001
+             May 18 12:17:11.475 INF abc-2: listening on 127.0.0.1:5005
+             May 18 12:17:11.475 INF abc-3: listening on 127.0.0.1:5006
+             May 18 12:17:11.475 INF abc-1: listening on 127.0.0.1:5004
+       - Assuming your process owner is "abc", here is a walkthrough what you can do at the command prompt
+             paxos> help
+             Commands:
+             list                   - list the nodes (hub only)
+             log [info|debug|trace] - set logging level
+             test owner1 owner2 ... - test owners nodes (hub only)
+             quit                   - quit the program
+             help                   - show usage
+             paxos> log info
+             paxos> list
+             +---+-------+-----------+--------+--------+--------+
+             | # | OWNER | HOST      | PORT 1 | PORT 2 | PORT 3 |
+             +---+-------+-----------+--------+--------+--------+
+             | 1 | ref   | 127.0.0.1 | 5001   | 5002   | 5003   |
+             +---+-------+-----------+--------+--------+--------+
+             | 2 | abc   | 127.0.0.1 | 5004   | 5005   | 5006   |
+             +---+-------+-----------+--------+--------+--------+
+             paxos> test ref abc
+             Testing ref
+             17:10:17.355 INF sys-1/ref-1 will propose 23
+             17:10:17.356 INF sys-1/ref-2 will propose 74
+             17:10:17.357 INF Starting system sys-1 of process ref-1 ...
+             17:10:17.357 INF sys-1/ref-1: Starting consensus among ref-1, ref-2, ref-3
+             17:10:17.358 INF sys-1/ref-3 will propose 97
+             17:10:17.358 INF Starting system sys-1 of process ref-2 ...
+             17:10:17.358 INF sys-1/ref-2: Starting consensus among ref-1, ref-2, ref-3
+             paxos> 17:10:17.359 INF Starting system sys-1 of process ref-3 ...
+             17:10:17.359 INF sys-1/ref-3: Starting consensus among ref-1, ref-2, ref-3
+             17:10:17.376 INF sys-1/ref-1 decided 97
+             17:10:17.378 INF sys-1/ref-2 decided 97
+             17:10:17.382 INF sys-1/ref-3 decided 97
+             paxos> quit
+             17:11:39.573 INF Stopping process ref-1 ...
+             17:11:39.648 INF Stopping process ref-2 ...
+             17:11:39.649 INF Stopping process ref-3 ...
+             17:11:39.649 INF Stopping hub ...
+             17:11:39.650 ERR Failed to send NETWORK_MESSAGE to ref-3 error="write tcp 127.0.0.1:55285->127.0.0.1:5003: wsasend: An existing connection was forcibly closed by the remote host."
+             17:11:40.420 INF Stopped
+       - A few comments on how this works
+         - Log level debug shows all messages except for those related to heartbeat
+         - Log level trace will show everything
+         - The test logs right over the command prompt, but you can always type "blindly" and hit ENTER. This may become
+           necessary if the trace logging is too much; just type "log debug" and hit ENTER.
+         - When the algorithm is over, it will seem stuck, but in fact is just waiting for another command. Hit ENTER
+           and you will see the prompt again.
+         - Look for INF log entries showing what each process has decided
+         - Everything you see in the console is also logged in file paxos.log
+         - The errors after quit are caused by the stopping heartbeat exchange, and can be ignoreed
+*/
+
+// Data structures
+message ProcessId {
+    string host = 1;  // String containing either domain name  or IP (most likely)
+    int32 port = 2;
+    string owner = 3; // Short alias or acronym of the owner of the process
+    int32 index = 4;  // Process index within the owner's processes. Must be 1, 2, or 3
+    int32 rank = 5;   // Populated by the hub when initiating consensus with AppPropose. Do not calculate your own rank,
+                      // just use this so that all nodes have the same values
+}
+
+message Value {       // Needed to model the undefined value that appears in the textbook
+    bool defined = 1;
+    int32 v = 2;      // Value; ignore if defined == false
+}
+
+// Messages and events
+// APP
+message AppRegistration { // Send to hub upon process startup: Message(NetworkMessage(Message(AppRegistration)))
+    string owner = 1;     // Some short alias
+    int32 index = 2;      // Process index: must be 1, 2, or 3
+}
+
+message AppPropose { // Received from the HUB as Message(NetworkMessage(Message(AppPropose))). Should be handled by the
+                     // application layer. No abstractions other than APP should be active before this is received,
+                     // because this will define the PI set Value value = 1; // Random value chosen by the HUB
+    Value value = 1;
+    repeated ProcessId processes = 2; // List of processes involved in the consensus algorithm (PI set)
+}
+
+message AppDecide {  // Upon receiving UcDecide, send to HUB as Message(NetworkMessage(Message(AppDecide)))
+    Value value = 1; // Decided value taken from UcDecide
+}
+
+// UC
+// In the Init event or constructor, initialize l (leader) with the max-rank process in PI
+message UcPropose {
+    Value value = 1;
+}
+
+message UcDecide {
+    Value value = 1;
+}
+
+// EP
+message EpAbort {
+}
+
+message EpAborted {
+    int32 ets = 1;  // Needed to know in UC the timestamp of the EP, where the algorithm says "such that ts = ets do"
+    int32 valueTimestamp = 2; // The timestamp part of the "state" mentioned in the algorithm
+    Value value = 3; // The value part of the "state" mentioned in the algorithm
+}
+
+message EpPropose {
+    Value value = 1;
+}
+
+message EpDecide {
+    int32 ets = 1; // Needed to know in UC the timestamp of the EP, where the algorithm says "such that ts = ets do"
+    Value value = 2;
+}
+
+message EpRead_ {
+}
+
+message EpState_ {
+    int32 valueTimestamp = 1;
+    Value value = 2;
+}
+
+message EpWrite_ {
+    Value value = 1;
+}
+
+message EpAccept_ {
+}
+
+message EpDecided_ {
+    Value value = 1;
+}
+
+message EcNack_ {
+}
+
+// EC
+// In the Init event or constructor, initialize "trusted" with the max-rank process in PI
+message EcStartEpoch {
+    int32 newTimestamp = 1;
+    ProcessId newLeader = 2;
+}
+
+message EcNewEpoch_ {
+    int32 timestamp = 1;
+}
+
+// BEB
+message BebBroadcast {
+    Message message = 1;
+}
+
+message BebDeliver {
+    Message message = 1;
+    ProcessId sender = 2;
+}
+
+// ELD
+message EldTimeout {
+}
+
+message EldTrust {
+    ProcessId process = 1;
+}
+
+// EPFD
+// Use as timer delay "delta" 100 milliseconds
+message EpfdTimeout {
+}
+
+message EpfdHeartbeatRequest_ {
+}
+
+message EpfdHeartbeatReply_ {
+}
+
+message EpfdSuspect {
+    ProcessId process = 1;
+}
+
+message EpfdRestore {
+    ProcessId process = 1;
+}
+
+// PL
+message PlSend {
+    ProcessId destination = 1;
+    Message message = 2;
+}
+
+message PlDeliver {
+    ProcessId sender = 1;
+    Message message = 2;
+}
+
+// Network-traveling message
+// When handling MessageA(PlSend(MessageB)) create MessageC(NetworkMessage(MessageB)), setting:
+//     MessageC.SystemId = MessageA.SystemId
+//     MessageC.AbstractionId = MessageA.AbstractionId
+//     NetworkMessage.senderHost = N/A (ignore)
+//     NetworkMessage.senderListeningPort = The your listening port
+// Then marshal MEssageC to byte buffer and send:
+//    bytes 0 - 3: buffer length
+//    bytes 4 -  : buffer data
+// When unmarshalling from a buffer received from the network create MessageD(PlDeliver(MessageB)), setting:
+//     MessageD.AbstractionId = MessageC.AbstractionId
+message NetworkMessage {
+    string senderHost = 1;
+    int32 senderListeningPort = 2;
+    Message message = 3;
+}
+
+// Wrapper message
+message Message {
+    enum Type {
+        NETWORK_MESSAGE = 0;
+
+        APP_REGISTRATION = 5;
+        APP_PROPOSE = 6;
+        APP_DECIDE = 7;
+
+        UC_DECIDE = 10;
+        UC_PROPOSE = 11;
+
+        EP_ABORT = 20;
+        EP_ABORTED = 21;
+        EP_ACCEPT_ = 22;
+        EP_DECIDE = 23;
+        EP_DECIDED_ = 24;
+        EP_PROPOSE = 25;
+        EP_READ_ = 26;
+        EP_STATE_ = 27;
+        EP_WRITE_ = 28;
+
+        EC_NACK_ = 30;
+        EC_NEW_EPOCH_ = 31;
+        EC_START_EPOCH = 32;
+
+        BEB_BROADCAST = 40;
+        BEB_DELIVER = 41;
+
+        ELD_TIMEOUT = 50;
+        ELD_TRUST = 51;
+
+        EPFD_TIMEOUT = 60;
+        EPFD_HEARTBEAT_REQUEST = 61;
+        EPFD_HEARTBEAT_REPLY = 62;
+        EPFD_SUSPECT = 63;
+        EPFD_RESTORE = 64;
+
+        PL_DELIVER = 70;
+        PL_SEND = 71;
+    }
+
+    Type type = 1;
+    string messageUuid = 2;
+    string abstractionId = 3; // One of: app, uc, ep0, ep1, ..., ec, eld, epfd, beb, pl
+    string systemId = 4;
+
+    NetworkMessage networkMessage = 5;
+
+    AppRegistration appRegistration = 6;
+    AppPropose appPropose = 7;
+    AppDecide appDecide = 8;
+
+    UcDecide ucDecide = 10;
+    UcPropose ucPropose = 11;
+
+    EpAbort epAbort = 20;
+    EpAborted epAborted = 21;
+    EpAccept_ epAccept_ = 22;
+    EpDecide epDecide = 23;
+    EpDecided_ epDecided_ = 24;
+    EpPropose epPropose = 25;
+    EpRead_ epRead_ = 26;
+    EpState_ epState_ = 27;
+    EpWrite_ epWrite_ = 28;
+
+    EcNack_ ecNack_ = 31;
+    EcNewEpoch_ ecNewEpoch_ = 32;
+    EcStartEpoch ecStartEpoch = 33;
+
+    BebBroadcast bebBroadcast = 40;
+    BebDeliver bebDeliver = 41;
+
+    EldTimeout eldTimeout = 50;
+    EldTrust eldTrust = 51;
+
+    EpfdTimeout epfdTimeout = 60;
+    EpfdHeartbeatRequest_ epfdHeartbeatRequest_ = 61;
+    EpfdHeartbeatReply_ epfdHeartbeatReply_ = 62;
+    EpfdSuspect epfdSuspect = 63;
+    EpfdRestore epfdRestore = 64;
+
+    PlDeliver plDeliver = 70;
+    PlSend plSend = 71;
+}
