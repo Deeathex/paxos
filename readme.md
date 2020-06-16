@@ -17,8 +17,28 @@ nodes developed in the application).
 
 
 **To run:**  
-cd ConsensusAlgorithm\src\main\resources\paxos-reference-binaries  
-paxos-windows-amd64.exe localhost 5000 localhost 5001 5002 5003  // to start the hub
-// start the project by running the main (this will start 3 nodes)
-paxos> list  // list the nodes available in hub (3 included in the hub + other nodes started with the application)
-paxos> test ref node // start the consensus between ref and node nodes registered to the hub
+``` bash
+cd ConsensusAlgorithm\src\main\resources\paxos-reference-binaries
+
+paxos-windows-amd64.exe localhost 5000 localhost 5001 5002 5003 
+```
+
+The command from above will start the hub on localhost and will start the ref nodes directly available in the hub
+on localhsot ports: 5001, 5002, 5003. After running this command, the project should be started by running the main.
+
+Afterwards, in the paxos console (started from above) the user can trigger the following commands:
+
+``` bash
+paxos> list
+```
+
+The list command from above will show all the nodes registered to the hub.
+(Which should be ref1, ref2, ref3 which are implicit in the hub and node1, node2, node3 which are
+the nodes of the developed application) 
+
+``` bash
+paxos> test ref node
+```
+
+This command will start the consensus between ref and node nodes registered to the hub and all the
+nodes should decide upon the same value.
